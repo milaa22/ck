@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Путь к олимпийскому золоту — интерактивная игра</title>
+<style>
+:root{--navy:#10243a;--blue:#2c6685;--ice:#eaf7fb;--pink:#f4b9d0;--pink2:#ffe2ec;--white:#fff;--muted:#607688;--gold:#d6a84f;--line:#d9e8ef}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--navy);background:linear-gradient(145deg,#d9f0f7 0%,#f8fbfd 52%,#fce8f0 100%);min-height:100vh}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid #d6a84f;outline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;color:var(--muted);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
+.brand{font-weight:800;color:var(--blue)}
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:clamp(28px,6vw,64px);background:linear-gradient(125deg,rgba(12,37,60,.96),rgba(37,99,128,.9)),radial-gradient(circle at 90% 10%,#fff,transparent 32%);color:#fff;box-shadow:0 22px 60px #24465c24}
+.hero:after{content:"";position:absolute;width:260px;height:260px;border:1px solid #ffffff35;border-radius:50%;right:-60px;bottom:-120px;box-shadow:0 0 0 30px #ffffff08,0 0 0 60px #ffffff06}
+.eyebrow{color:#b9e5f4;text-transform:uppercase;font-size:.78rem;font-weight:bold;letter-spacing:.18em}
+h1{font-size:clamp(2rem,6vw,4.1rem);line-height:1.04;margin:14px 0}
+.hero p{max-width:630px;color:#e4f3f8;font-size:1.08rem;line-height:1.65}
+.primary,.choice,.secondary{border:0;border-radius:14px;padding:14px 18px;font-weight:700;transition:transform .18s,box-shadow .18s,background .18s}
+.primary{background:var(--pink);color:#48253a;margin-top:12px;box-shadow:0 8px 22px #0002}
+.primary:hover,.choice:hover,.secondary:hover{transform:translateY(-2px)}
+.decor{position:absolute;right:8%;top:20%;font-size:clamp(4rem,11vw,8rem);opacity:.15;transform:rotate(-12deg)}
+.panel{background:#ffffffed;border:1px solid #ffffff;border-radius:24px;padding:clamp(20px,4vw,38px);margin-top:18px;box-shadow:0 16px 44px #284b6014}
+.hidden{display:none!important}
+.storyhead{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.chapter{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:800}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{border:1px solid var(--line);background:var(--ice);padding:8px 11px;border-radius:999px;font-size:.82rem;color:#33566a}
+.stat b{color:var(--navy)}
+h2{font-size:clamp(1.45rem,4vw,2.25rem);margin:8px 0 12px}
+.story{font-size:1.06rem;line-height:1.8;color:#294355;white-space:pre-line}
+.scene-art{font-size:3.4rem;margin:8px 0 2px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:24px}
+.choice{text-align:left;background:#f3f9fb;border:1px solid var(--line);color:var(--navy);padding:18px;min-height:98px}
+.choice span{display:block;font-size:.88rem;line-height:1.45;color:var(--muted);font-weight:400;margin-top:7px}
+.choice:hover{background:#e6f5fa;box-shadow:0 8px 22px #24465c12}
+.choice.pink{background:#fff0f5;border-color:#f4d0de}
+.choice.pink:hover{background:#ffe3ed}
+.feedback{margin-top:18px;padding:16px 18px;background:#edf8f3;border-left:4px solid #5baf8b;border-radius:10px;line-height:1.6}
+.progressrow{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;color:var(--muted);margin-top:20px}
+.progress{height:7px;background:#e4edf1;border-radius:99px;overflow:hidden;margin-top:8px}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,#4e9dbb,#e9a9c3);transition:width .4s}
+.footer{color:var(--muted);text-align:center;font-size:.82rem;margin-top:22px;line-height:1.6}
+.secondary{background:#edf5f8;color:var(--navy);border:1px solid var(--line)}
+.endmark{font-size:3.4rem}
+@media(max-width:600px){.topline{align-items:flex-start;flex-direction:column}.hero{border-radius:20px}.choices{grid-template-columns:1fr}.choice{min-height:unset}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topline"><span class="brand">ЛЁД • ХАРАКТЕР • МЕЧТА</span><span>Интерактивная история</span></div>
+  <section id="intro" class="hero">
+    <div class="decor" aria-hidden="true">❄</div>
+    <div class="eyebrow">Твоя история начинается здесь</div>
+    <h1>Путь к<br>олимпийскому золоту</h1>
+    <p>Ты — начинающая фигуристка в России. Тебя ждут первые тренировки, непростые решения, выступления и шанс найти собственный стиль на льду. Здесь нет теста на правильные ответы: только твои решения и их последствия.</p>
+    <button class="primary" onclick="startGame()">Выйти на лёд →</button>
+  </section>
+
+  <main id="game" class="panel hidden" aria-live="polite">
+    <div class="storyhead">
+      <div class="chapter" id="chapter">Глава 1</div>
+      <div class="stats">
+        <span class="stat">Техника <b id="tech">0</b></span>
+        <span class="stat">Выносливость <b id="stamina">0</b></span>
+        <span class="stat">Настрой <b id="mood">0</b></span>
+      </div>
+    </div>
+    <div class="scene-art" id="art" aria-hidden="true">⛸️</div>
+    <h2 id="title"></h2>
+    <div class="story" id="story"></div>
+    <div id="feedback" class="feedback hidden"></div>
+    <div id="choices" class="choices"></div>
+    <div class="progressrow"><span id="progressText">История только начинается</span><span id="progressPct">0%</span></div>
+    <div class="progress"><div id="progressBar"></div></div>
+  </main>
+  <div class="footer">Небольшая сюжетная игра о фигурном катании в России • Работает без установки и интернета после сохранения файла</div>
+</div>
+<script>
+const scenes = {
+  start: {
+    chapter:"Глава 1 · Первые шаги", art:"⛸️", title:"Первый выход на лёд",
+    story:"На катке пахнет холодом и свежезаточенными коньками. Тренер спрашивает, чего ты ждёшь от фигурного катания. Ты пока не знаешь, станешь ли чемпионкой, но точно хочешь попробовать.",
+    choices:[
+      {label:"Учиться постепенно",desc:"Сначала стойка, скольжение и уверенность.",pink:true,next:"discipline",stats:{tech:1,mood:1},note:"Ты не торопишь себя и закладываешь надёжную основу."},
+      {label:"Сразу мечтать о сложных элементах",desc:"Хочется быстрее почувствовать настоящий спорт.",next:"discipline",stats:{tech:1,stamina:1},note:"Амбиции дают энергию. Тренер напоминает: сложные элементы требуют базы."}
+    ]
+  },
+  discipline: {
+    chapter:"Глава 1 · Твой стиль",art:"✨",title:"Какой будет твоя история?",
+    story:"В России развиваются разные направления фигурного катания. Тренер предлагает выбрать то, что тебе ближе. Этот выбор повлияет на некоторые события дальше.",
+    choices:[
+      {label:"Одиночное катание",desc:"Прыжки, вращения и личная программа.",next:"firstfall",stats:{tech:2},set:{discipline:"Одиночное катание"}},
+      {label:"Парное катание",desc:"Поддержки, синхронность и доверие партнёру.",next:"partner",stats:{stamina:1,mood:1},set:{discipline:"Парное катание"}},
+      {label:"Танцы на льду",desc:"Музыка, ритм и выразительные дорожки шагов.",next:"dance",stats:{mood:2,tech:1},set:{discipline:"Танцы на льду"}}
+    ]
+  },
+  firstfall: {
+    chapter:"Глава 2 · Первые трудности",art:"🧊",title:"Не всё получается с первого раза",
+    story:"На тренировке ты несколько раз теряешь равновесие. Вокруг другие ребята уже осваивают новые элементы. Тебе обидно, и появляется мысль, что, возможно, у тебя ничего не выйдет.",
+    choices:[
+      {label:"Попросить тренера разобрать базу",desc:"Вернуться к технике и понять, что именно не получается.",pink:true,next:"routine",stats:{tech:2,mood:1},note:"Ты находишь конкретную задачу вместо того, чтобы ругать себя."},
+      {label:"Сделать паузу и посмотреть со стороны",desc:"Отдохнуть, понаблюдать за техникой других.",next:"routine",stats:{stamina:1,mood:2},note:"Небольшая пауза помогает вернуть спокойствие и заметить детали."}
+    ]
+  },
+  partner: {
+    chapter:"Глава 2 · Доверие",art:"🤝",title:"Учиться вместе",
+    story:"В парном катании многое зависит от взаимодействия. На тренировке вы с партнёром не сразу чувствуете общий ритм, и оба расстраиваетесь.",
+    choices:[
+      {label:"Обсудить, что не получается",desc:"Спокойно договориться о сигналах и темпе.",pink:true,next:"routine",stats:{tech:1,mood:2},note:"Открытый разговор помогает вам лучше понимать друг друга."},
+      {label:"Повторять короткие связки",desc:"Сначала простые движения, затем соединить их.",next:"routine",stats:{tech:2,stamina:1},note:"Постепенная работа делает движения согласованнее."}
+    ]
+  },
+  dance: {
+    chapter:"Глава 2 · Музыка",art:"🎼",title:"Найти свой ритм",
+    story:"Тренер включает музыку. Ты пробуешь передать характер мелодии движением, но пока думаешь о каждом шаге отдельно и теряешь плавность.",
+    choices:[
+      {label:"Сначала слушать музыку и считать ритм",desc:"Разобрать музыкальные акценты.",pink:true,next:"routine",stats:{tech:1,mood:2},note:"Когда ты слышишь структуру музыки, движения становятся выразительнее."},
+      {label:"Повторять связку медленно",desc:"Добиться точности, а потом добавить скорость.",next:"routine",stats:{tech:2,stamina:1},note:"Медленный темп помогает соединить шаги в цельную дорожку."}
+    ]
+  },
+  routine: {
+    chapter:"Глава 3 · Подготовка",art:"📅",title:"Неделя до первого старта",
+    story:"До первых городских соревнований неделя. Ты устала после учёбы и тренировок. Тренер предлагает составить план на оставшиеся дни: важно подготовиться и не довести себя до полного истощения.",
+    choices:[
+      {label:"Чередовать тренировку и восстановление",desc:"Отработать важное, оставить время на сон и отдых.",pink:true,next:"competition",stats:{stamina:2,mood:1},note:"Восстановление — часть подготовки, а не потерянное время."},
+      {label:"Каждый день добавлять ещё одну тренировку",desc:"Кажется, что больше занятий обязательно даст лучший результат.",next:"competition",stats:{tech:2,stamina:-1,mood:-1},note:"Дополнительная нагрузка быстро утомляет. Тренер предлагает следить за самочувствием и не игнорировать усталость."}
+    ]
+  },
+  competition: {
+    chapter:"Глава 4 · Выступление",art:"🏟️",title:"За минуту до выхода",
+    story:"Ты стоишь у бортика. Свет арены кажется ярче обычного, зрители шумят. Ты волнуешься: хочется показать всё, чему научилась, но страх ошибки мешает сосредоточиться.",
+    choices:[
+      {label:"Сосредоточиться на первых движениях",desc:"Сделать спокойный вдох и вспомнить начало программы.",pink:true,next:"result",stats:{mood:2,tech:1},note:"Ты возвращаешь внимание к тому, что можешь контролировать прямо сейчас."},
+      {label:"Представить, как ты катаешься под музыку",desc:"Мысленно пройти программу целиком.",next:"result",stats:{mood:1,tech:1},note:"Мысленная репетиция помогает вспомнить последовательность движений."}
+    ]
+  },
+  result: {
+    chapter:"Глава 5 · Новый этап",art:"🌟",title:"После выступления",
+    story:"Музыка заканчивается, и ты слышишь аплодисменты. Ты не можешь контролировать каждую оценку, но можешь понять, чему научилась за этот путь.",
+    choices:[
+      {label:"Разобрать выступление с тренером",desc:"Отметить удачные моменты и выбрать одну цель на будущее.",pink:true,next:"ending",stats:{tech:2,mood:1},note:"Ты превращаешь опыт в понятный следующий шаг."},
+      {label:"Отпраздновать свой первый старт",desc:"Поблагодарить партнёров, близких и себя за смелость.",next:"ending",stats:{mood:2,stamina:1},note:"Ты замечаешь не только результат, но и путь, который уже прошла."}
+    ]
+  },
+  ending: {
+    chapter:"Финал · Продолжение следует",art:"🏆",title:"Твоя история только начинается",
+    story:"",
+    choices:[]
+  }
+};
+let state = {tech:0,stamina:0,mood:0,discipline:"Пока не выбрано",steps:0,lastNote:""};
+const totalSteps=6;
+function startGame(){
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+  state={tech:0,stamina:0,mood:0,discipline:"Пока не выбрано",steps:0,lastNote:""};
+  render("start");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function render(id){
+  const s=scenes[id];
+  document.getElementById("chapter").textContent=s.chapter;
+  document.getElementById("art").textContent=s.art;
+  document.getElementById("title").textContent=s.title;
+  document.getElementById("tech").textContent=state.tech;
+  document.getElementById("stamina").textContent=state.stamina;
+  document.getElementById("mood").textContent=state.mood;
+  const story=document.getElementById("story");
+  story.textContent=s.story;
+  const feedback=document.getElementById("feedback");
+  feedback.classList.add("hidden");
+  const choices=document.getElementById("choices");
+  choices.innerHTML="";
+  if(id==="ending"){
+    story.textContent = `Ты выбрала направление: ${state.discipline}.\n\nЗа эту историю ты развивала технику, училась заботиться о выносливости и возвращать себе настрой после трудностей.\n\nТвои показатели в конце пути:\n• Техника: ${state.tech}\n• Выносливость: ${state.stamina}\n• Настрой: ${state.mood}\n\n${state.tech>=7 && state.stamina>=2 && state.mood>=4 ? "Ты завершила этот этап как уверенная спортсменка: у тебя есть база, устойчивость и желание двигаться дальше." : state.stamina<1 ? "Ты узнала, что нельзя бесконечно требовать от себя большего. Следующий этап — восстановить силы и выстроить устойчивый режим." : state.mood<3 ? "Ты многое узнала о себе. Теперь важно найти поддержку и вернуть удовольствие от катания." : "Ты прошла важный этап, приобрела опыт и готова продолжать путь к новым соревнованиям."}\n\nВ фигурном катании успех складывается не из одного идеального проката, а из тренировок, поддержки, восстановления и любви к своему делу.`;
+    const restart=document.createElement("button");restart.className="choice pink";restart.innerHTML="Начать новую историю<span>Попробовать другой путь и принять другие решения.</span>";restart.onclick=startGame;choices.appendChild(restart);
+  } else {
+    s.choices.forEach(c=>{
+      const b=document.createElement("button");
+      b.className="choice"+(c.pink?" pink":"");
+      b.innerHTML=`${c.label}<span>${c.desc}</span>`;
+      b.onclick=()=>{
+        if(c.stats) Object.keys(c.stats).forEach(k=>state[k]+=c.stats[k]);
+        if(c.set) Object.assign(state,c.set);
+        state.steps++;
+        state.lastNote=c.note||"";
+        render(c.next);
+        if(state.lastNote && c.next!=="ending"){
+          const f=document.getElementById("feedback");f.textContent=state.lastNote;f.classList.remove("hidden");
+        }
+        const pct=Math.min(100,Math.round(state.steps/totalSteps*100));
+        document.getElementById("progressBar").style.width=pct+"%";
+        document.getElementById("progressPct").textContent=pct+"%";
+        document.getElementById("progressText").textContent=`Пройдено этапов: ${state.steps}`;
+        document.getElementById("game").scrollIntoView({behavior:"smooth",block:"start"});
+      };
+      choices.appendChild(b);
+    });
+  }
+  const pct=Math.min(100,Math.round(state.steps/totalSteps*100));
+  document.getElementById("progressBar").style.width=pct+"%";
+  document.getElementById("progressPct").textContent=pct+"%";
+  document.getElementById("progressText").textContent=state.steps?`Пройдено этапов: ${state.steps}`:"История только начинается";
+}
+</script>
+</body>
+</html>
